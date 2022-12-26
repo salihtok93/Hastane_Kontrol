@@ -159,6 +159,9 @@ public class LoginGUI extends JFrame {
 								bhekim.setTcno(rs.getString("tcno"));
 								bhekim.setName(rs.getString("name"));
 								bhekim.setType(rs.getString("type"));
+								BashekimGUI bGUI = new BashekimGUI(bhekim);
+								bGUI.setVisible(true);
+								dispose();
 								
 							}
 							

@@ -52,7 +52,7 @@ public class BashekimGUI extends JFrame {
 		
 		JLabel lblNewLabel = new JLabel("Hosgeldiniz , Sayın "+ bashekim.getName());
 		lblNewLabel.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 16));
-		lblNewLabel.setBounds(10, 10, 153, 25);
+		lblNewLabel.setBounds(10, 10, 297, 25);
 		w_pane.add(lblNewLabel);
 		
 		JButton btn_cikis = new JButton("Cıkıs Yap");
