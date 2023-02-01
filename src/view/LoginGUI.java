@@ -153,15 +153,29 @@ public class LoginGUI extends JFrame {
 						ResultSet rs = st.executeQuery("SELECT * FROM user");
 						while(rs.next()) {
 							if(fld_doctorTcno.getText().equals(rs.getString("tcno")) && (fld_doctorPass.getText().equals(rs.getString("password")))) {
-								BasHekim bhekim = new BasHekim();
-								bhekim.setId(rs.getInt("id"));
-								bhekim.setPassword("password");
-								bhekim.setTcno(rs.getString("tcno"));
-								bhekim.setName(rs.getString("name"));
-								bhekim.setType(rs.getString("type"));
-								BashekimGUI bGUI = new BashekimGUI(bhekim);
-								bGUI.setVisible(true);
-								dispose();
+								if(rs.getString("type").equals("bashekim")) {
+									BasHekim bhekim = new BasHekim();
+									bhekim.setId(rs.getInt("id"));
+									bhekim.setPassword("password");
+									bhekim.setTcno(rs.getString("tcno"));
+									bhekim.setName(rs.getString("name"));
+									bhekim.setType(rs.getString("type"));
+									BashekimGUI bGUI = new BashekimGUI(bhekim);
+									bGUI.setVisible(true);
+									dispose();
+								}
+								
+								if(rs.getString("type").equals("doktor")) {
+									Doctor doctor = new Doctor();
+									doctor.setId(rs.getInt("id"));
+									doctor.setPassword("password");
+									doctor.setTcno(rs.getString("tcno"));
+									doctor.setName(rs.getString("name"));
+									doctor.setType(rs.getString("type"));
+									DoctorGUI dGUI = new DoctorGUI(doctor);
+									dGUI.setVisible(true);
+									dispose();
+								}
 								
 							}
 							

@@ -107,15 +107,14 @@ public class BashekimGUI extends JFrame {
 			clinicModel.addRow(clinicData);
 
 		}
-		
-		//Worker Model
+
+		// Worker Model
 		DefaultTableModel workerModel = new DefaultTableModel();
 		Object[] colWorker = new Object[2];
 		colWorker[0] = "ID";
 		colWorker[1] = "Ad Soyad";
 		workerModel.setColumnIdentifiers(colWorker);
 		Object[] workerData = new Object[2];
-		
 
 		setResizable(false);
 		setTitle("Hastane Yonetim Sistemi");
@@ -389,7 +388,7 @@ public class BashekimGUI extends JFrame {
 		JScrollPane w_scroolWorker = new JScrollPane();
 		w_scroolWorker.setBounds(400, 10, 255, 325);
 		w_clinic.add(w_scroolWorker);
-		
+
 		table_worker = new JTable();
 		w_scroolWorker.setViewportView(table_worker);
 
@@ -402,7 +401,6 @@ public class BashekimGUI extends JFrame {
 		select_doctor.addActionListener(e -> {
 			JComboBox c = (JComboBox) e.getSource();
 			Item item = (Item) c.getSelectedItem();
-			System.out.println(item.getKey() + "" + item.getValue());
 		});
 		w_clinic.add(select_doctor);
 
@@ -418,6 +416,16 @@ public class BashekimGUI extends JFrame {
 						boolean control = bashekim.addWorker(doctorItem.getKey(), selClinicID);
 						if (control) {
 							Helper.showMsg("success");
+							DefaultTableModel clearModel = (DefaultTableModel) table_worker.getModel();
+							clearModel.setRowCount(0);
+							for (int i = 0; i < bashekim.getClinicDoctorList(selClinicID).size(); i++) {
+								workerData[0] = bashekim.getClinicDoctorList(selClinicID).get(i).getId();
+								workerData[1] = bashekim.getClinicDoctorList(selClinicID).get(i).getName();
+								workerModel.addRow(workerData);
+
+							}
+							table_worker.setModel(workerModel);
+
 						} else
 							Helper.showMsg("error");
 					} catch (SQLException e1) {
@@ -431,36 +439,36 @@ public class BashekimGUI extends JFrame {
 		btn_addWorker.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 12));
 		btn_addWorker.setBounds(273, 292, 117, 21);
 		w_clinic.add(btn_addWorker);
-		
+
 		JLabel lbl_clinicName_1 = new JLabel("Polikinlik adı");
 		lbl_clinicName_1.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 11));
 		lbl_clinicName_1.setBounds(273, 137, 114, 20);
 		w_clinic.add(lbl_clinicName_1);
-		
+
 		JButton btn_workerSelect = new JButton("Sec");
-		
+
 		btn_workerSelect.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				int selRow = table_clinic.getSelectedRow();
-				if(selRow >=0) {
+				if (selRow >= 0) {
 					String selClinic = table_clinic.getModel().getValueAt(selRow, 0).toString();
 					int selClinicID = Integer.parseInt(selClinic);
 					DefaultTableModel clearModel = (DefaultTableModel) table_worker.getModel();
 					clearModel.setRowCount(0);
-					
+
 					try {
-						for(int i = 0 ; i < bashekim.getClinicDoctorList(selClinicID).size();i++) {
-							workerData[0] = bashekim.getClinicDoctorList(selClinicID).get(i).getId(); 
+						for (int i = 0; i < bashekim.getClinicDoctorList(selClinicID).size(); i++) {
+							workerData[0] = bashekim.getClinicDoctorList(selClinicID).get(i).getId();
 							workerData[1] = bashekim.getClinicDoctorList(selClinicID).get(i).getName();
 							workerModel.addRow(workerData);
-							
+
 						}
 					} catch (SQLException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					table_worker.setModel(workerModel);
-				}else {
+				} else {
 					Helper.showMsg("Lütfen bir Polikinlik Seciniz !");
 				}
 			}
