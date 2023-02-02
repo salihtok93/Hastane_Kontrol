@@ -117,6 +117,33 @@ public class LoginGUI extends JFrame {
 		w_hastaLogin.add(btn_register);
 		
 		JButton btn_hastaLogin = new JButton("Giris Yap");
+		btn_hastaLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(fld_hastaTc.getText().length() == 0 || fld_hastaPass.getText().length() == 0 ) {
+					Helper.showMsg("fill");
+				}
+				try {
+					Connection con = conn.connDb();
+					Statement st = con.createStatement();
+					ResultSet rs = st.executeQuery("SELECT * FROM user");
+					while(rs.next()) {
+						if(fld_hastaTc.getText().equals(rs.getString("tcno")) && fld_hastaPass.getText().equals(rs.getString("password"))) {
+							Hasta hasta = new Hasta();
+							hasta.setId(rs.getInt("id"));
+							hasta.setPassword("password");
+							hasta.setTcno(rs.getString("tcno"));
+							hasta.setName(rs.getString("name"));
+							hasta.setType(rs.getString("type"));
+							HastaGUI hGUI = new HastaGUI(hasta);
+							hGUI.setVisible(true);
+							dispose();
+						}
+					}
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
 		btn_hastaLogin.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 16));
 		btn_hastaLogin.setBounds(230, 166, 194, 50);
 		w_hastaLogin.add(btn_hastaLogin);
