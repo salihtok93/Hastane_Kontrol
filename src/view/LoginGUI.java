@@ -104,6 +104,14 @@ public class LoginGUI extends JFrame {
 		w_hastaLogin.add(fld_hastaPass);
 		
 		JButton btn_register = new JButton("Kayıt Ol");
+		btn_register.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				RegisterGUI rGUI = new RegisterGUI();
+				rGUI.setVisible(true);
+				dispose();
+				
+			}
+		});
 		btn_register.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 16));
 		btn_register.setBounds(10, 166, 194, 50);
 		w_hastaLogin.add(btn_register);

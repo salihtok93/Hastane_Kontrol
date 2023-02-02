@@ -23,6 +23,9 @@ public class Helper {
 		case "success":
 			msg = "İslem Basarili ! ";
 			break;
+		case "error":
+			msg = "Bir Error Gerceklesti";
+			break;
 		default:
 			msg = str;
 		}

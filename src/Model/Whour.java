@@ -1,5 +1,6 @@
 package Model;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -54,6 +55,31 @@ public class Whour {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	
+	public ArrayList<Whour> getWhourList(int doctor_id) throws SQLException {
+		ArrayList<Whour> list = new ArrayList<>();
+		Whour obj;
+		try {
+			Connection con = conn.connDb();
+			st = con.createStatement();
+			rs = st.executeQuery("SELECT * FROM workhour WHERE status = 'a' AND doctor_id ="+doctor_id);
+			while (rs.next()) {
+				obj = new Whour();
+				obj.setId(rs.getInt("id"));
+				obj.setDoctor_id(rs.getInt("doctor_id"));
+				obj.setDoctor_name(rs.getString("doctor_name"));
+				obj.setStatus(rs.getString("status"));
+				obj.setWdate(rs.getString("wdate"));
+				list.add(obj);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return list;
+
 	}
 	
 	

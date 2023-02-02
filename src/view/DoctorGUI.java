@@ -92,6 +92,13 @@ public class DoctorGUI extends JFrame {
 		w_pane.add(lblNewLabel);
 
 		JButton btn_cikis = new JButton("Cıkıs Yap");
+		btn_cikis.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LoginGUI loginGUI = new LoginGUI();
+				loginGUI.setVisible(true);
+				dispose();
+			}
+		});
 		btn_cikis.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 13));
 		btn_cikis.setBounds(603, 22, 93, 25);
 		w_pane.add(btn_cikis);

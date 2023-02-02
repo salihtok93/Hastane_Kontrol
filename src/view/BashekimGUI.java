@@ -134,6 +134,13 @@ public class BashekimGUI extends JFrame {
 		w_pane.add(lblNewLabel);
 
 		JButton btn_cikis = new JButton("Cıkıs Yap");
+		btn_cikis.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				LoginGUI loginGUI = new LoginGUI();
+				loginGUI.setVisible(true);
+				dispose();
+			}
+		});
 		btn_cikis.setBounds(633, 10, 93, 25);
 		btn_cikis.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 13));
 		w_pane.add(btn_cikis);
