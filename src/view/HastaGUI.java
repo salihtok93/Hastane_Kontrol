@@ -9,6 +9,7 @@ import javax.swing.table.DefaultTableModel;
 
 import Helper.Helper;
 import Helper.Item;
+import Model.Appointment;
 import Model.Clinic;
 import Model.Hasta;
 import Model.Whour;
@@ -36,6 +37,12 @@ public class HastaGUI extends JFrame {
 	private Whour whour = new Whour();
 	private DefaultTableModel whourModel;
 	private Object[] whourData = null;
+	private int selectDoctorID = 0;
+	private String selectDoctorName = null;
+	private JTable table_appoint;
+	private Appointment appoint = new Appointment();
+	private DefaultTableModel appointModel;
+	private Object[] appointData = null;
 
 	/**
 	 * Launch the application.
@@ -74,6 +81,21 @@ public class HastaGUI extends JFrame {
 		whourModel.setColumnIdentifiers(colWhour);
 		whourData = new Object[2];
 		
+		appointModel = new DefaultTableModel();
+		Object[] colAppoint = new Object[3];
+		colAppoint[0] = "ID";
+		colAppoint[1] = "Doktor ";
+		colAppoint[2] = "Tarih ";
+		appointModel.setColumnIdentifiers(colAppoint);
+		appointData = new Object[3];
+		
+		for(int i = 0 ; i < appoint.getHastaList(hasta.getId()).size();i++ ) {
+			appointData[0] = appoint.getHastaList(hasta.getId()).get(i).getId();
+			appointData[1] = appoint.getHastaList(hasta.getId()).get(i).getDoctorName();
+			appointData[2] = appoint.getHastaList(hasta.getId()).get(i).getAppDate();
+			appointModel.addRow(appointData);
+		}
+		
 		setResizable(false);
 		setTitle("Hastane Yönetim Sistemi");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -85,7 +107,7 @@ public class HastaGUI extends JFrame {
 		setContentPane(w_pane);
 		w_pane.setLayout(null);
 
-		JLabel lblNewLabel = new JLabel("Hosgeldiniz , Sayın" + hasta.getName());
+		JLabel lblNewLabel = new JLabel("Hosgeldiniz , Sayın " + hasta.getName());
 		lblNewLabel.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 16));
 		lblNewLabel.setBounds(10, 11, 297, 25);
 		w_pane.add(lblNewLabel);
@@ -188,6 +210,9 @@ public class HastaGUI extends JFrame {
 					}
 					table_whour.setModel(whourModel);
 					
+					selectDoctorID = id;
+					selectDoctorName = table_doctor.getModel().getValueAt(row, 1).toString();
+					
 				}else {
 					Helper.showMsg("Lütfen Bir Doktor Seciniz !");
 				}
@@ -209,5 +234,70 @@ public class HastaGUI extends JFrame {
 		_dname_1.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 11));
 		_dname_1.setBounds(440, 16, 82, 20);
 		w_appointment.add(_dname_1);
+		
+		JLabel lbl_appo = new JLabel("Randevu");
+		lbl_appo.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 11));
+		lbl_appo.setBounds(313, 240, 114, 20);
+		w_appointment.add(lbl_appo);
+		
+		JButton btn_addAppoint = new JButton("Randevu Al");
+		btn_addAppoint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				int selRow = table_whour.getSelectedRow();
+				if(selRow >= 0) {
+					String date = table_whour.getModel().getValueAt(selRow, 1).toString();
+					try {
+						boolean control = hasta.addAppointment(selectDoctorID, hasta.getId(),selectDoctorName, hasta.getName(), date);
+						if(control) {
+							Helper.showMsg("success");
+							hasta.updataWhourStatus(selectDoctorID, date);
+							updateWhourModel(selectDoctorID);
+							updateAppointModel(hasta.getId());
+							
+						}else {
+							Helper.showMsg("error");
+						}
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
+				}else {
+					Helper.showMsg("Lütfen gecerli bir tarih seciniz !");
+				}
+			}
+		});
+		btn_addAppoint.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 12));
+		btn_addAppoint.setBounds(313, 270, 117, 21);
+		w_appointment.add(btn_addAppoint);
+		
+		JPanel w_appoint = new JPanel();
+		w_tab.addTab("Randevularım", null, w_appoint, null);
+		w_appoint.setLayout(null);
+		
+		JScrollPane w_scroolAppoint = new JScrollPane();
+		w_scroolAppoint.setBounds(10, 10, 691, 324);
+		w_appoint.add(w_scroolAppoint);
+		
+		table_appoint = new JTable(appointModel);
+		w_scroolAppoint.setViewportView(table_appoint);
+	}
+	public void updateWhourModel(int doctor_id) throws SQLException {
+		DefaultTableModel clearModel = (DefaultTableModel) table_whour.getModel();
+		clearModel.setRowCount(0);
+		for(int i = 0 ; i < whour.getWhourList(doctor_id).size() ; i++) {
+			whourData[0] = whour.getWhourList(doctor_id).get(i).getId();
+			whourData[1] = whour.getWhourList(doctor_id).get(i).getWdate();
+			whourModel.addRow(whourData);
+		}
+	}
+	
+	public void updateAppointModel(int hasta_id) throws SQLException {
+		DefaultTableModel clearModel = (DefaultTableModel) table_appoint.getModel();
+		clearModel.setRowCount(0);
+		for(int i = 0 ; i < appoint.getHastaList(hasta_id).size();i++ ) {
+			appointData[0] = appoint.getHastaList(hasta_id).get(i).getId();
+			appointData[1] = appoint.getHastaList(hasta_id).get(i).getDoctorName();
+			appointData[2] = appoint.getHastaList(hasta_id).get(i).getAppDate();
+			appointModel.addRow(appointData);
+		}
 	}
 }

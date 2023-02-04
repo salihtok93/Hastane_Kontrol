@@ -26,10 +26,10 @@ public class LoginGUI extends JFrame {
 
 	private JPanel w_pane;
 	private JTextField fld_hastaTc;
-	private JTextField fld_hastaPass;
 	private JTextField fld_doctorTcno;
 	private JPasswordField fld_doctorPass;
 	private DBConnetion conn = new DBConnetion();
+	private JPasswordField fld_hastaPass;
 
 	/**
 	 * Launch the application.
@@ -97,12 +97,6 @@ public class LoginGUI extends JFrame {
 		w_hastaLogin.add(fld_hastaTc);
 		fld_hastaTc.setColumns(10);
 		
-		fld_hastaPass = new JTextField();
-		fld_hastaPass.setFont(new Font("Yu Gothic UI Light", Font.PLAIN, 17));
-		fld_hastaPass.setColumns(10);
-		fld_hastaPass.setBounds(170, 88, 254, 38);
-		w_hastaLogin.add(fld_hastaPass);
-		
 		JButton btn_register = new JButton("Kayıt Ol");
 		btn_register.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -122,6 +116,7 @@ public class LoginGUI extends JFrame {
 				if(fld_hastaTc.getText().length() == 0 || fld_hastaPass.getText().length() == 0 ) {
 					Helper.showMsg("fill");
 				}
+				boolean key = true; 
 				try {
 					Connection con = conn.connDb();
 					Statement st = con.createStatement();
@@ -137,16 +132,24 @@ public class LoginGUI extends JFrame {
 							HastaGUI hGUI = new HastaGUI(hasta);
 							hGUI.setVisible(true);
 							dispose();
+							key = false;
 						}
 					}
 				} catch (SQLException e1) {
 					e1.printStackTrace();
+				}
+				if(key) {
+					Helper.showMsg("Boyle bir Hasta Bulunamadı Lütfen Kayıt Olunuz");
 				}
 			}
 		});
 		btn_hastaLogin.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 16));
 		btn_hastaLogin.setBounds(230, 166, 194, 50);
 		w_hastaLogin.add(btn_hastaLogin);
+		
+		fld_hastaPass = new JPasswordField();
+		fld_hastaPass.setBounds(170, 88, 254, 38);
+		w_hastaLogin.add(fld_hastaPass);
 		
 		JPanel w_doctorLogin = new JPanel();
 		w_doctorLogin.setBackground(Color.WHITE);
