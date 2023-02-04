@@ -12,6 +12,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 
+import Model.Appointment;
 import Model.BasHekim;
 import Model.Clinic;
 
@@ -54,6 +55,10 @@ public class BashekimGUI extends JFrame {
 	private JTable table_clinic;
 	private JTextField fld_clinicName;
 	private JTable table_worker;
+	private JTable table_doctorAppoint;
+	private DefaultTableModel d_appointModel;
+	private Object[] d_appointData = null;
+	private Appointment appoint = new Appointment();
 
 	/**
 	 * Launch the application.
@@ -77,6 +82,28 @@ public class BashekimGUI extends JFrame {
 	 * @throws SQLException
 	 */
 	public BashekimGUI(BasHekim bashekim) throws SQLException {
+		
+		d_appointModel = new DefaultTableModel();
+		Object[] colAppoint = new Object[4];
+		colAppoint[0] = "ID";
+		colAppoint[1] = "Doktor";
+		colAppoint[2] = "Hasta";
+		colAppoint[3] = "Tarih";
+		
+		d_appointModel.setColumnIdentifiers(colAppoint);
+		d_appointData = new Object[4];
+		try {
+			for (int i = 0; i < appoint.getRandevuList().size(); i++) {
+				d_appointData[0] = appoint.getRandevuList().get(i).getId();
+				d_appointData[1] = appoint.getRandevuList().get(i).getDoctorName();
+				d_appointData[2] = appoint.getRandevuList().get(i).getHastaName();
+				d_appointData[3] = appoint.getRandevuList().get(i).getAppDate();
+				d_appointModel.addRow(d_appointData);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		// Doctor Model
 		doctorModel = new DefaultTableModel();
 		Object[] colDoctorName = new Object[4];
@@ -483,6 +510,40 @@ public class BashekimGUI extends JFrame {
 		btn_workerSelect.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 12));
 		btn_workerSelect.setBounds(273, 167, 117, 21);
 		w_clinic.add(btn_workerSelect);
+		
+		JPanel w_appoint = new JPanel();
+		w_tab.addTab("Randevular", null, w_appoint, null);
+		w_appoint.setLayout(null);
+		
+		JButton btn_delAppoint = new JButton("Randevu Sil");
+		btn_delAppoint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(Helper.confirm("sure")) {
+					try {
+						String selDate = (String) table_doctorAppoint.getValueAt(table_doctorAppoint.getSelectedRow(), 3);
+						String selDoctorName = (String) table_doctorAppoint.getValueAt(table_doctorAppoint.getSelectedRow(),
+								1);
+						appoint.deleteAppoint(selDate, selDoctorName);
+						Helper.showMsg("success");
+						updateDAppointModel();
+						
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					
+				}
+			}
+		});
+		btn_delAppoint.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 12));
+		btn_delAppoint.setBounds(538, 310, 117, 21);
+		w_appoint.add(btn_delAppoint);
+		
+		JScrollPane w_scroolAppoint = new JScrollPane();
+		w_scroolAppoint.setBounds(10, 10, 645, 283);
+		w_appoint.add(w_scroolAppoint);
+		
+		table_doctorAppoint = new JTable(d_appointModel);
+		w_scroolAppoint.setViewportView(table_doctorAppoint);
 
 	}
 
@@ -507,6 +568,18 @@ public class BashekimGUI extends JFrame {
 			clinicData[1] = clinic.getList().get(i).getName();
 			clinicModel.addRow(clinicData);
 
+		}
+	}
+	
+	public void updateDAppointModel() throws SQLException {
+		DefaultTableModel clearModel = (DefaultTableModel) table_doctorAppoint.getModel();
+		clearModel.setRowCount(0);
+		for (int i = 0; i < appoint.getRandevuList().size(); i++) {
+			d_appointData[0] = appoint.getRandevuList().get(i).getId();
+			d_appointData[1] = appoint.getRandevuList().get(i).getDoctorName();
+			d_appointData[2] = appoint.getRandevuList().get(i).getHastaName();
+			d_appointData[3] = appoint.getRandevuList().get(i).getAppDate();
+			d_appointModel.addRow(d_appointData);
 		}
 	}
 }

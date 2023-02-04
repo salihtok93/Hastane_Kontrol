@@ -7,6 +7,7 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 
+import Model.Appointment;
 import Model.Doctor;
 
 import java.awt.Color;
@@ -35,6 +36,10 @@ public class DoctorGUI extends JFrame {
 	private JTable table_whour;
 	private DefaultTableModel whourModel ;
 	private Object[] whourData = null;
+	private JTable table_doctorAppoint;
+	private DefaultTableModel d_appointModel;
+	private Object[] d_appointData = null;
+	private Appointment appoint = new Appointment();
 	
 
 	/**
@@ -57,6 +62,25 @@ public class DoctorGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public DoctorGUI(Doctor doctor) {
+		
+		d_appointModel = new DefaultTableModel();
+		Object[] colAppoint = new Object[3];
+		colAppoint[0] = "ID";
+		colAppoint[1] = "Hasta";
+		colAppoint[2] = "Tarih";
+		d_appointModel.setColumnIdentifiers(colAppoint);
+		d_appointData = new Object[3];
+		try {
+			for (int i = 0; i < appoint.getRandevuList(doctor.getId()).size(); i++) {
+				d_appointData[0] = appoint.getRandevuList(doctor.getId()).get(i).getId();
+				d_appointData[1] = appoint.getRandevuList(doctor.getId()).get(i).getHastaName();
+				d_appointData[2] = appoint.getRandevuList(doctor.getId()).get(i).getAppDate();
+				d_appointModel.addRow(d_appointData);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		whourModel = new DefaultTableModel();
 		Object[] colWhour = new Object[2];
 		colWhour[0] ="ID";
@@ -193,6 +217,38 @@ public class DoctorGUI extends JFrame {
 		btn_deletewhour.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 13));
 		btn_deletewhour.setBounds(562, 10, 93, 25);
 		w_whour.add(btn_deletewhour);
+		
+		JPanel w_appoint = new JPanel();
+		w_tab.addTab("Randevularım", null, w_appoint, null);
+		w_appoint.setLayout(null);
+		
+		JScrollPane w_scroolAppoint = new JScrollPane();
+		w_scroolAppoint.setBounds(10, 10, 645, 279);
+		w_appoint.add(w_scroolAppoint);
+		
+		table_doctorAppoint = new JTable(d_appointModel);
+		w_scroolAppoint.setViewportView(table_doctorAppoint);
+		
+		JButton btn_delAppoint = new JButton("Randevu Sil");
+		btn_delAppoint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(Helper.confirm("sure")) {
+					try {
+						String selDate = (String) table_doctorAppoint.getValueAt(table_doctorAppoint.getSelectedRow(), 2);
+						appoint.deleteAppoint(selDate, doctor.getId());
+						Helper.showMsg("success");
+						updateDAppointModel(doctor.getId());
+						
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+					
+				}
+			}
+		});
+		btn_delAppoint.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 12));
+		btn_delAppoint.setBounds(538, 314, 117, 21);
+		w_appoint.add(btn_delAppoint);
 	}
 	public void updateWhourModel(Doctor doctor) throws SQLException {
 		DefaultTableModel clearModel = (DefaultTableModel) table_whour.getModel();
@@ -203,5 +259,19 @@ public class DoctorGUI extends JFrame {
 			whourModel.addRow(whourData);
 		}
 		
+	}
+	public void updateDAppointModel(int doctor_id) throws SQLException {
+		DefaultTableModel clearModel = (DefaultTableModel) table_doctorAppoint.getModel();
+		clearModel.setRowCount(0);
+		try {
+			for (int i = 0; i < appoint.getRandevuList(doctor_id).size(); i++) {
+				d_appointData[0] = appoint.getRandevuList(doctor_id).get(i).getId();
+				d_appointData[1] = appoint.getRandevuList(doctor_id).get(i).getHastaName();
+				d_appointData[2] = appoint.getRandevuList(doctor_id).get(i).getAppDate();
+				d_appointModel.addRow(d_appointData);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }

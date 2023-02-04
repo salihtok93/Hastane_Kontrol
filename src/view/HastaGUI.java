@@ -288,6 +288,7 @@ public class HastaGUI extends JFrame {
 						String selDate = (String) table_appoint.getValueAt(table_appoint.getSelectedRow(), 2);
 						String selDoctorName = (String) table_appoint.getValueAt(table_appoint.getSelectedRow(), 1);
 						appoint.deleteAppoint(selDate, selDoctorName);
+						Helper.showMsg("success");
 						updateAppointModel(hasta.getId());
 
 					} catch (Exception e1) {
@@ -297,7 +298,7 @@ public class HastaGUI extends JFrame {
 			}
 		});
 		btn_delAppoint.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 12));
-		btn_delAppoint.setBounds(298, 313, 117, 21);
+		btn_delAppoint.setBounds(584, 313, 117, 21);
 		w_appoint.add(btn_delAppoint);
 	}
 	public void updateWhourModel(int doctor_id) throws SQLException {
