@@ -185,6 +185,7 @@ public class LoginGUI extends JFrame {
 				if(fld_doctorTcno.getText().length() == 0 || fld_doctorPass.getText().length() == 0) {
 					Helper.showMsg("fill");
 				}else {
+					boolean key = true; 
 					try {
 						Connection con = conn.connDb();
 						Statement st = con.createStatement();
@@ -201,6 +202,7 @@ public class LoginGUI extends JFrame {
 									BashekimGUI bGUI = new BashekimGUI(bhekim);
 									bGUI.setVisible(true);
 									dispose();
+									key = false;
 								}
 								
 								if(rs.getString("type").equals("doktor")) {
@@ -213,6 +215,7 @@ public class LoginGUI extends JFrame {
 									DoctorGUI dGUI = new DoctorGUI(doctor);
 									dGUI.setVisible(true);
 									dispose();
+									key = false;
 								}
 								
 							}
@@ -220,6 +223,9 @@ public class LoginGUI extends JFrame {
 						}
 					} catch (SQLException e1) {
 						e1.printStackTrace();
+					}
+					if(key) {
+						Helper.showMsg("Böyle bir doktor bulunamadı Bashekiminizle iletişim kurunuz");
 					}
 				}
 			}

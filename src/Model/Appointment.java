@@ -30,6 +30,24 @@ public class Appointment {
 		this.appDate = appDate;
 	}
 	
+	public void deleteAppoint(String date, String name) {
+		Connection con = conn.connDb();
+		try {
+			st = con.createStatement();
+			String query1 = "DELETE FROM appointment WHERE app_date='" + date + "'"+"AND doctor_name='"+ name +"'";
+			String query2 = "UPDATE workhour SET status='a' WHERE doctor_name='" + name + "' AND wdate='" + date + "' ";
+
+			preparedStatement = con.prepareStatement(query1);
+			preparedStatement.executeUpdate();
+
+			preparedStatement = con.prepareStatement(query2);
+			preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public ArrayList<Appointment> getDoctorList(int doctor_id) throws SQLException {
 		Connection con = conn.connDb();
 		ArrayList<Appointment> list = new ArrayList<>();

@@ -83,6 +83,8 @@ public class Hasta extends User {
 
 	}
 	
+	
+	
 	public boolean updataWhourStatus(int doctor_id,String wdate) throws SQLException {
 		int key = 0;
 		String query = "UPDATE workhour SET status = ? WHERE doctor_id =? AND wdate =?";

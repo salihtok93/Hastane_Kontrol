@@ -274,11 +274,31 @@ public class HastaGUI extends JFrame {
 		w_appoint.setLayout(null);
 		
 		JScrollPane w_scroolAppoint = new JScrollPane();
-		w_scroolAppoint.setBounds(10, 10, 691, 324);
+		w_scroolAppoint.setBounds(10, 10, 691, 293);
 		w_appoint.add(w_scroolAppoint);
 		
 		table_appoint = new JTable(appointModel);
 		w_scroolAppoint.setViewportView(table_appoint);
+		
+		JButton btn_delAppoint = new JButton("Randevu Sil");
+		btn_delAppoint.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if(Helper.confirm("sure")) {
+					try {
+						String selDate = (String) table_appoint.getValueAt(table_appoint.getSelectedRow(), 2);
+						String selDoctorName = (String) table_appoint.getValueAt(table_appoint.getSelectedRow(), 1);
+						appoint.deleteAppoint(selDate, selDoctorName);
+						updateAppointModel(hasta.getId());
+
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+			}
+		});
+		btn_delAppoint.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 12));
+		btn_delAppoint.setBounds(298, 313, 117, 21);
+		w_appoint.add(btn_delAppoint);
 	}
 	public void updateWhourModel(int doctor_id) throws SQLException {
 		DefaultTableModel clearModel = (DefaultTableModel) table_whour.getModel();
