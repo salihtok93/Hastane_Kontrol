@@ -91,12 +91,18 @@ public class BasHekim extends User {
 	public boolean deleteDoctor(int id) throws SQLException {
 
 		String query = "DELETE FROM user WHERE id = ?";
+		String query1 = "DELETE FROM worker WHERE id = ?";
 		boolean key = false;
 		try {
 			st = con.createStatement();
 			preparedStatement = con.prepareStatement(query);
 			preparedStatement.setInt(1, id);
 			preparedStatement.executeUpdate();
+			
+			preparedStatement = con.prepareStatement(query1);
+			preparedStatement.setInt(1, id);
+			preparedStatement.executeUpdate();
+			
 			key = true;
 		} catch (Exception e) {
 			e.printStackTrace();
