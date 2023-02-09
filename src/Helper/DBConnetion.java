@@ -5,7 +5,7 @@ public class DBConnetion {
 	public DBConnetion(){}
 	public Connection connDb() {
 		try {
-			this.c = DriverManager.getConnection("jdbc:mariadb://localhost:3306/hospital?user=root&password=Strabzon61");
+			this.c = DriverManager.getConnection("jdbc:mariadb://localhost:3306/hospital?user=****&password=*********");
 			return c;
 		} catch (SQLException e) {
 			e.printStackTrace();
